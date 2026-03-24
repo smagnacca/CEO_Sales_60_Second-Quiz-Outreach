@@ -53,8 +53,8 @@
   .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); transition: width .5s ease; }
 
   /* CARD */
-  .card { background: white; border: 1px solid var(--border); border-radius: 4px; border-top: 3px solid var(--green); box-shadow: 0 4px 24px rgba(0,0,0,.06); animation: up .35s ease; }
-  @keyframes up { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+  .card { background: white; border: 1px solid var(--border); border-radius: 4px; border-top: 3px solid var(--green); box-shadow: 0 4px 24px rgba(0,0,0,.06); animation: fadeUp .35s ease; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
   .card-body { padding: 44px 48px 36px; }
   .q-label { font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
   .card h2 { font-family: 'Merriweather', serif; font-size: 1.4rem; font-weight: 700; color: var(--green); line-height: 1.4; margin-bottom: 32px; }
@@ -78,20 +78,85 @@
   .btn-next:hover:not(:disabled) { background: var(--green-mid); box-shadow: 0 4px 14px rgba(27,67,50,.25); }
   .btn-next:disabled { background: #C8C4BC; cursor: default; }
 
-  /* EMAIL */
-  .form-card { border-top-color: var(--gold); }
-  .form-eyebrow { font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-  .form-card h2 { font-family: 'Merriweather', serif; font-size: 1.35rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-  .form-sub { font-size: .85rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 28px; }
+  /* ─── LOCK GATE ─────────────────────────────────────────────── */
+  .lock-card { border-top-color: var(--gold); }
+  .lock-gate { text-align: center; padding: 44px 48px 0; }
+  .lock-icon-wrap { margin: 0 auto 28px; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .lock-icon-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,.18) 0%, rgba(201,168,76,0) 70%);
+    animation: lockGlow 2s ease-in-out infinite;
+  }
+  @keyframes lockGlow {
+    0%, 100% { opacity: .6; transform: scale(1); }
+    50%       { opacity: 1; transform: scale(1.1); }
+  }
+  #lockSvg { width: 80px; height: 80px; filter: drop-shadow(0 4px 12px rgba(201,168,76,.35)); }
+  .shackle { transform-origin: 50% 40%; transition: transform .5s cubic-bezier(.34,1.56,.64,1); }
+  .lock-body { transition: transform .3s ease; }
+
+  @keyframes lockShake {
+    0%   { transform: rotate(0deg) translateX(0); }
+    10%  { transform: rotate(-6deg) translateX(-4px); }
+    20%  { transform: rotate(6deg) translateX(4px); }
+    30%  { transform: rotate(-5deg) translateX(-3px); }
+    40%  { transform: rotate(5deg) translateX(3px); }
+    50%  { transform: rotate(-3deg) translateX(-2px); }
+    60%  { transform: rotate(3deg) translateX(2px); }
+    70%  { transform: rotate(-2deg) translateX(-1px); }
+    80%  { transform: rotate(2deg) translateX(1px); }
+    90%  { transform: rotate(-1deg); }
+    100% { transform: rotate(0deg) translateX(0); }
+  }
+  .shake { animation: lockShake .55s ease-in-out; }
+
+  .lock-headline { font-family: 'Merriweather', serif; font-size: 1.3rem; font-weight: 700; color: var(--green); margin-bottom: 8px; line-height: 1.35; }
+  .lock-sub { font-size: .87rem; color: var(--text-soft); line-height: 1.65; margin-bottom: 32px; max-width: 380px; margin-left: auto; margin-right: auto; }
+
+  /* FORM FIELDS */
+  .form-fields { padding: 0 48px 0; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: .7rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
   .field input { width: 100%; border: 1.5px solid var(--border); border-radius: 3px; padding: 12px 14px; font-family: 'Inter', sans-serif; font-size: .92rem; color: var(--text); background: var(--cream); transition: border-color .18s; }
   .field input:focus { outline: none; border-color: var(--green); background: white; }
   .field input::placeholder { color: #B8B4AC; }
-  .privacy { font-size: .74rem; color: var(--text-soft); line-height: 1.55; margin-bottom: 24px; padding: 12px 14px; background: var(--cream); border-radius: 3px; border: 1px solid var(--border); }
-  .btn-submit { width: 100%; background: var(--green); color: white; border: none; padding: 16px; font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 600; cursor: pointer; border-radius: 3px; transition: all .2s; letter-spacing: .04em; }
+  .privacy { font-size: .74rem; color: var(--text-soft); line-height: 1.55; margin: 0 48px 24px; padding: 12px 14px; background: var(--cream); border-radius: 3px; border: 1px solid var(--border); }
+  .btn-submit { display: block; width: calc(100% - 96px); margin: 0 48px 40px; background: var(--green); color: white; border: none; padding: 16px; font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 600; cursor: pointer; border-radius: 3px; transition: all .2s; letter-spacing: .04em; position: relative; overflow: hidden; }
   .btn-submit:hover:not(:disabled) { background: var(--green-mid); box-shadow: 0 4px 16px rgba(27,67,50,.25); }
   .btn-submit:disabled { background: #C8C4BC; cursor: default; }
+  .btn-submit .btn-text { transition: opacity .2s; }
+  .btn-submit .btn-spinner { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; }
+  .btn-submit.loading .btn-text { opacity: 0; }
+  .btn-submit.loading .btn-spinner { display: flex; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner-ring { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: spin .75s linear infinite; }
+
+  /* ─── THANK YOU / UNLOCK STATE ──────────────────────────────── */
+  .thankyou-wrap { text-align: center; padding: 44px 48px 36px; }
+  .unlock-icon-wrap { margin: 0 auto 24px; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .unlock-burst {
+    position: absolute; inset: -16px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,.35) 0%, rgba(201,168,76,0) 70%);
+    animation: burstPulse .6s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes burstPulse {
+    0%   { opacity: 0; transform: scale(.5); }
+    40%  { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(1.8); }
+  }
+  .thankyou-msg { font-family: 'Merriweather', serif; font-size: 1.4rem; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+  .thankyou-sub { font-size: .88rem; color: var(--text-soft); line-height: 1.65; margin-bottom: 0; }
+
+  /* ─── FIREWORKS CANVAS ──────────────────────────────────────── */
+  #fireworksCanvas {
+    position: fixed; inset: 0; pointer-events: none; z-index: 999;
+    opacity: 0; transition: opacity .3s;
+  }
+  #fireworksCanvas.active { opacity: 1; }
 
   /* RESULTS */
   .results-top { padding: 44px 48px 32px; display: flex; gap: 32px; align-items: flex-start; border-bottom: 1px solid var(--border); }
@@ -111,7 +176,12 @@
   .insight strong { display: block; font-size: .88rem; font-weight: 600; color: var(--green); margin-bottom: 3px; }
   .insight p { font-size: .82rem; color: var(--text-soft); line-height: 1.55; }
 
-  .cta-block { margin: 32px 48px 44px; background: var(--green); border-radius: 4px; padding: 36px 40px; display: flex; gap: 28px; align-items: center; justify-content: space-between; }
+  .followup-block { margin: 24px 48px; padding: 20px 24px; background: #EAF2EE; border: 1px solid rgba(27,67,50,.15); border-radius: 4px; border-left: 4px solid var(--green); display: flex; gap: 16px; align-items: center; }
+  .followup-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .followup-text strong { display: block; font-size: .9rem; font-weight: 600; color: var(--green); margin-bottom: 3px; }
+  .followup-text p { font-size: .82rem; color: var(--text-soft); line-height: 1.55; }
+
+  .cta-block { margin: 0 48px 44px; background: var(--green); border-radius: 4px; padding: 36px 40px; display: flex; gap: 28px; align-items: center; justify-content: space-between; }
   .cta-block h3 { font-family: 'Merriweather', serif; font-size: 1.15rem; font-weight: 700; color: white; margin-bottom: 6px; }
   .cta-block p { font-size: .82rem; color: rgba(255,255,255,.65); line-height: 1.55; }
   .btn-cta { background: var(--gold); color: var(--green); text-decoration: none; padding: 13px 26px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: .82rem; border-radius: 3px; white-space: nowrap; transition: background .18s; letter-spacing: .03em; flex-shrink: 0; }
@@ -124,19 +194,33 @@
 
   .hidden { display: none !important; }
 
+  /* result reveal animation */
+  @keyframes revealFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { animation: revealFade .5s ease forwards; }
+
   @media (max-width: 600px) {
     nav { padding: 14px 20px; } .nav-badge { display: none; }
     .stats { grid-template-columns: 1fr; } .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
     .card-body, .card-foot { padding: 28px 20px; }
+    .lock-gate { padding: 32px 20px 0; }
+    .form-fields, .privacy, .btn-submit { padding-left: 20px; padding-right: 20px; }
+    .btn-submit { width: calc(100% - 40px); margin-left: 20px; margin-right: 20px; }
     .results-top { flex-direction: column; padding: 28px 20px; }
     .insights { padding: 20px; }
-    .cta-block { margin: 20px; padding: 28px 24px; flex-direction: column; }
+    .followup-block { margin: 16px 20px; }
+    .cta-block { margin: 0 20px 32px; padding: 28px 24px; flex-direction: column; }
     .btn-cta { width: 100%; text-align: center; }
     footer { padding: 20px; flex-direction: column; text-align: center; }
   }
 </style>
 </head>
 <body>
+
+<!-- Fireworks canvas (sits above everything, pointer-events: none) -->
+<canvas id="fireworksCanvas"></canvas>
 
 <nav>
   <div class="nav-left">
@@ -247,18 +331,68 @@
     <div class="card-foot"><button class="btn-back" onclick="back(4)">← Back</button><button class="btn-next" id="next4" onclick="next(4)" disabled>See My Results →</button></div>
   </div>
 
-  <!-- EMAIL CAPTURE -->
-  <div id="emailCapture" class="card form-card hidden">
-    <div class="card-body">
-      <div class="form-eyebrow">Almost There</div>
-      <h2>Your AI Risk Score is ready</h2>
-      <p class="form-sub">Enter your details below to unlock your personalized score and recommendations from Babson College.</p>
-      <div class="field"><label>Full Name</label><input type="text" id="userName" placeholder="Jane Smith" /></div>
-      <div class="field"><label>Work Email</label><input type="email" id="userEmail" placeholder="jane@company.com" /></div>
-      <div class="field"><label>Company / Organization</label><input type="text" id="userCompany" placeholder="Acme Corporation" /></div>
-      <div class="privacy">🔒 Your information is kept confidential. By submitting, you agree to be contacted about relevant AI education programs from Babson College Professional & Executive Education.</div>
-      <button class="btn-submit" id="submitBtn" onclick="submitQuiz()">Reveal My AI Risk Score →</button>
+  <!-- ─── LOCK / EMAIL GATE ──────────────────────────────────── -->
+  <div id="emailCapture" class="card lock-card hidden">
+
+    <!-- LOCKED STATE -->
+    <div id="lockedState">
+      <div class="lock-gate">
+        <div class="lock-icon-wrap">
+          <!-- Lock SVG -->
+          <svg id="lockSvg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shackle (the arc on top) -->
+            <g id="shackleGroup" class="shackle">
+              <path d="M24 38 C24 24 56 24 56 38" stroke="#1B4332" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <line x1="24" y1="36" x2="24" y2="44" stroke="#1B4332" stroke-width="6" stroke-linecap="round"/>
+              <line x1="56" y1="36" x2="56" y2="44" stroke="#1B4332" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <!-- Lock body -->
+            <g id="lockBody" class="lock-body">
+              <rect x="16" y="42" width="48" height="30" rx="5" fill="#1B4332"/>
+              <!-- Keyhole -->
+              <circle cx="40" cy="56" r="5" fill="#C9A84C"/>
+              <rect x="37.5" y="56" width="5" height="8" rx="2" fill="#C9A84C"/>
+            </g>
+          </svg>
+        </div>
+        <h2 class="lock-headline">Your AI Risk Score is ready.</h2>
+        <p class="lock-sub">Enter your details below to unlock your personalized score and expert recommendations from Babson College.</p>
+      </div>
+
+      <div class="form-fields">
+        <div class="field"><label>Full Name</label><input type="text" id="userName" placeholder="Jane Smith" /></div>
+        <div class="field"><label>Work Email</label><input type="email" id="userEmail" placeholder="jane@company.com" /></div>
+        <div class="field"><label>Company / Organization</label><input type="text" id="userCompany" placeholder="Acme Corporation" /></div>
+      </div>
+      <p class="privacy">🔒 Your information is kept confidential. By submitting, you agree to be contacted about relevant AI education programs from Babson College Professional &amp; Executive Education.</p>
+      <button class="btn-submit" id="submitBtn" onclick="submitQuiz()">
+        <span class="btn-text">Unlock My AI Risk Score →</span>
+        <span class="btn-spinner"><span class="spinner-ring"></span></span>
+      </button>
     </div>
+
+    <!-- THANK YOU STATE (shown after submit, before results) -->
+    <div id="thankyouState" class="hidden">
+      <div class="thankyou-wrap">
+        <div class="unlock-icon-wrap">
+          <div class="unlock-burst" id="unlockBurst"></div>
+          <svg id="lockSvgUnlocked" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:80px;height:80px; filter: drop-shadow(0 4px 16px rgba(27,67,50,.3))">
+            <!-- Shackle swung open -->
+            <g id="shackleOpen" style="transform-origin:24px 44px">
+              <path d="M24 38 C24 24 56 24 56 38" stroke="#1B7A4A" stroke-width="6" stroke-linecap="round" fill="none" style="transform: rotate(-40deg); transform-origin: 24px 44px;"/>
+              <line x1="24" y1="36" x2="24" y2="44" stroke="#1B7A4A" stroke-width="6" stroke-linecap="round"/>
+              <line x1="56" y1="36" x2="56" y2="44" stroke="transparent" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <rect x="16" y="42" width="48" height="30" rx="5" fill="#1B7A4A"/>
+            <circle cx="40" cy="56" r="5" fill="#C9A84C"/>
+            <rect x="37.5" y="56" width="5" height="8" rx="2" fill="#C9A84C"/>
+          </svg>
+        </div>
+        <p class="thankyou-msg">You're all set! 🎉</p>
+        <p class="thankyou-sub">Calculating your personalized AI Risk Score…</p>
+      </div>
+    </div>
+
   </div>
 
   <!-- RESULTS -->
@@ -270,9 +404,19 @@
   <a href="mailto:pdennis@babson.edu">pdennis@babson.edu</a>
 </footer>
 
+<!-- ─────────────────────────────────────────────────────────────── -->
 <script>
-const answers = {};
+// ─── CONFIG ──────────────────────────────────────────────────────
+// Replace with your Formspree endpoint after creating a free form at formspree.io
+// Configure the form to notify: smagnacca@babson.edu + pdennis@babson.edu
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xpwzjran';
 
+// ─── STATE ───────────────────────────────────────────────────────
+const answers = {};
+let shakeTimer = null;
+let shakeCount = 0;
+
+// ─── QUIZ LOGIC ──────────────────────────────────────────────────
 function pick(btn) {
   const q = btn.dataset.q;
   document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
@@ -290,11 +434,46 @@ function setProgress(step) {
 function show(id) { document.getElementById(id).classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 function hide(id) { document.getElementById(id).classList.add('hidden'); }
 
-function next(from) { hide('q' + from); setProgress(from + 1); show(from < 4 ? 'q' + (from + 1) : 'emailCapture'); }
-function back(from) { hide('q' + from); setProgress(from - 1); show('q' + (from - 1)); }
+function next(from) {
+  hide('q' + from);
+  setProgress(from + 1);
+  if (from < 4) {
+    show('q' + (from + 1));
+  } else {
+    show('emailCapture');
+    // Start shaking after a brief delay so the card animates in first
+    setTimeout(() => startLockShake(), 500);
+  }
+}
 
+function back(from) {
+  hide('q' + from);
+  setProgress(from - 1);
+  show('q' + (from - 1));
+}
+
+// ─── LOCK SHAKE ──────────────────────────────────────────────────
+function startLockShake() {
+  shakeCount = 0;
+  doShake();
+}
+
+function doShake() {
+  const lockEl = document.getElementById('lockSvg');
+  if (!lockEl) return;
+  lockEl.classList.remove('shake');
+  // Force reflow so the animation restarts
+  void lockEl.offsetWidth;
+  lockEl.classList.add('shake');
+  shakeCount++;
+  if (shakeCount < 3) {
+    shakeTimer = setTimeout(doShake, 900);
+  }
+}
+
+// ─── SCORING ─────────────────────────────────────────────────────
 function calcScore() {
-  return Math.round(((Object.values(answers).reduce((a,b) => a+b, 0) - 4) / 12) * 100);
+  return Math.round(((Object.values(answers).reduce((a, b) => a + b, 0) - 4) / 12) * 100);
 }
 
 function getProfile(score) {
@@ -303,9 +482,10 @@ function getProfile(score) {
     headline: "Immediate action is needed.",
     summary: "Your organization is in a vulnerable position. Competitors are compounding their AI advantage every week. The good news: organizations that begin structured upskilling now can still close the gap.",
     insights: [
-      { icon: "⚠️", title: "High Exposure", body: "AI-enabled teams complete key tasks 3–5× faster. This gap compounds weekly and is already impacting competitive positioning." },
-      { icon: "📉", title: "Talent Risk", body: "77% of employers now expect AI fluency. Without it, your organization faces growing disadvantages in hiring and retaining top professionals." },
-      { icon: "🚀", title: "The Window Is Open", body: "Organizations that begin structured AI programs in the next 90 days will be in a meaningfully stronger position by year-end." }
+      { icon: "⚠️", title: "High Competitive Exposure", body: "AI-enabled teams complete key tasks 3–5× faster. This gap compounds weekly and is already impacting competitive positioning in your market." },
+      { icon: "📉", title: "Talent Risk Is Growing", body: "77% of employers now expect AI fluency. Without structured training, your organization faces growing disadvantages in hiring and retaining top professionals." },
+      { icon: "🚀", title: "The Window to Act Is Open — But Won't Stay That Way", body: "Organizations that begin structured AI programs in the next 90 days will be in a meaningfully stronger position by year-end." },
+      { icon: "🎯", title: "A Tailored Roadmap Changes Everything", body: "Babson's executive programs are designed for exactly this moment — practical, fast, and built around real organizational challenges." }
     ]
   };
   if (score <= 50) return {
@@ -313,9 +493,10 @@ function getProfile(score) {
     headline: "Awareness is there — action is not.",
     summary: "You understand the stakes but haven't yet built the systems or skills to capitalize. The window to act at low cost is still open, but it's narrowing as early movers pull ahead.",
     insights: [
-      { icon: "⏱️", title: "Time Is a Factor", body: "Organizations just 6 months ahead in AI adoption are already seeing measurable productivity and revenue advantages over peers." },
-      { icon: "🧩", title: "Inconsistent Skills", body: "Informal AI use without structured training creates inconsistency. A few skilled individuals don't move the needle organization-wide." },
-      { icon: "📋", title: "No Roadmap = Reactive Mode", body: "Without a formal strategy, AI adoption stays reactive. A structured plan typically delivers 3× the ROI of ad hoc experimentation." }
+      { icon: "⏱️", title: "Time Is a Differentiator", body: "Organizations just 6 months ahead in AI adoption are already seeing measurable productivity and revenue advantages over peers." },
+      { icon: "🧩", title: "Inconsistent Skills Create Friction", body: "Informal AI use without structured training creates inconsistency and risk. A few skilled individuals don't move the needle organization-wide." },
+      { icon: "📋", title: "No Roadmap = Reactive Mode", body: "Without a formal strategy, AI adoption stays reactive and expensive. A structured plan typically delivers 3× the ROI of ad hoc experimentation." },
+      { icon: "🤝", title: "Peer Organizations Are Moving Fast", body: "Companies at your stage that commit to structured upskilling in the next quarter report closing the gap within 6–12 months." }
     ]
   };
   if (score <= 75) return {
@@ -323,9 +504,10 @@ function getProfile(score) {
     headline: "You're building — now scale it.",
     summary: "You're moving in the right direction, but execution gaps remain. The challenge is converting early momentum into organization-wide capability before competitors do.",
     insights: [
-      { icon: "📈", title: "Solid Foundation", body: "Your pilots and early programs are a real asset. The next step is systematizing them into repeatable, scalable workflows." },
-      { icon: "🎯", title: "Skill Distribution", body: "Uneven AI fluency across teams limits ROI. Structured programs that reach every level deliver 2–4× better outcomes." },
-      { icon: "🏆", title: "Edge Within Reach", body: "With focused investment over the next quarter, your organization can move from fast follower to sector leader." }
+      { icon: "📈", title: "You Have a Solid Foundation", body: "Your pilots and early programs are a real asset. The next step is systematizing them into repeatable, scalable workflows across every team." },
+      { icon: "🎯", title: "Skill Distribution Limits ROI", body: "Uneven AI fluency across teams limits your returns. Structured programs that reach every level of the org deliver 2–4× better outcomes." },
+      { icon: "🏆", title: "Competitive Edge Is Within Reach", body: "With focused investment over the next quarter, your organization can move from fast follower to recognized sector leader." },
+      { icon: "🔭", title: "Now Is the Time to Formalize", body: "Babson's executive programs help organizations like yours codify informal gains into lasting competitive advantage." }
     ]
   };
   return {
@@ -333,31 +515,87 @@ function getProfile(score) {
     headline: "You're ahead — now lead.",
     summary: "Your organization is in a strong position. The priority now is sustaining your advantage, deepening AI governance, and building the leadership skills to guide your industry through the transition.",
     insights: [
-      { icon: "✅", title: "Strong Position", body: "You've moved beyond experimentation. Focus now shifts to AI governance, ethics frameworks, and competitive differentiation." },
-      { icon: "🔭", title: "The Next Frontier", body: "Leading organizations are applying AI to strategic foresight and executive decision-making — not just operational efficiency." },
-      { icon: "🤝", title: "Lead the Conversation", body: "Your team is positioned to shape industry norms. Executive programs can sharpen the AI leadership skills to do so." }
+      { icon: "✅", title: "Strong Position, Real Advantage", body: "You've moved beyond experimentation. Focus now shifts to AI governance, ethics frameworks, and competitive differentiation at the strategic level." },
+      { icon: "🔭", title: "The Next Frontier: Strategic AI Leadership", body: "Leading organizations are applying AI to strategic foresight and executive decision-making — not just operational efficiency." },
+      { icon: "🤝", title: "Shape Your Industry", body: "Your team is positioned to define norms, not just follow them. Executive programs can sharpen the AI leadership skills to do so at scale." },
+      { icon: "📊", title: "Governance and Ethics Are the New Moat", body: "Organizations at your level are building AI governance frameworks that create trust, resilience, and long-term competitive separation." }
     ]
   };
 }
 
-function submitQuiz() {
+// ─── FORM SUBMISSION ─────────────────────────────────────────────
+async function submitQuiz() {
   const name    = document.getElementById('userName').value.trim();
   const email   = document.getElementById('userEmail').value.trim();
   const company = document.getElementById('userCompany').value.trim();
-  if (!name || !email || !company) { alert('Please complete all fields to see your results.'); return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+
+  if (!name || !email || !company) {
+    alert('Please complete all fields to unlock your score.');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid work email address.');
+    return;
+  }
 
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Calculating…';
+  btn.disabled = true;
+  btn.classList.add('loading');
 
   const score   = calcScore();
   const profile = getProfile(score);
   const first   = name.split(' ')[0];
 
-  hide('emailCapture');
+  // ── Send to Formspree (notifies smagnacca + pdennis) ─────────────
+  try {
+    await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        company,
+        ai_score: score + '/100',
+        risk_level: profile.level,
+        lead_source: 'Babson College Executive Education Flyer',
+        _subject: `New AI Risk Assessment — ${name} (${score}/100 · ${profile.level})`,
+        _replyto: email
+      })
+    });
+  } catch (err) {
+    console.warn('Formspree notification failed:', err);
+  }
+
+  // ── Unlock sequence ───────────────────────────────────────────
+  clearTimeout(shakeTimer);
+  document.getElementById('lockSvg').classList.remove('shake');
+
+  hide('lockedState');
+  show('thankyouState');
   setProgress(5);
 
+  // Trigger burst + fireworks
+  document.getElementById('unlockBurst').style.animation = 'none';
+  void document.getElementById('unlockBurst').offsetWidth;
+  document.getElementById('unlockBurst').style.animation = '';
+
+  // Short pause, then fire the works
+  setTimeout(() => {
+    launchFireworks();
+    // After fireworks peak, fade in results
+    setTimeout(() => {
+      buildResults(score, profile, name, first, email, company);
+      hide('emailCapture');
+      show('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 2200);
+  }, 400);
+}
+
+// ─── RESULTS ─────────────────────────────────────────────────────
+function buildResults(score, profile, name, first, email, company) {
   const el = document.getElementById('results');
+  el.classList.add('reveal');
   el.innerHTML = `
     <div class="results-top">
       <div class="score-ring" style="border-color:${profile.color}; color:${profile.color}">
@@ -371,23 +609,156 @@ function submitQuiz() {
       </div>
     </div>
     <div class="insights">
-      <div class="insights-label">Key Risk Indicators for Your Organization</div>
+      <div class="insights-label">Key Insights for Your Organization</div>
       ${profile.insights.map(i => `
         <div class="insight">
           <div class="insight-icon">${i.icon}</div>
           <div><strong>${i.title}</strong><p>${i.body}</p></div>
         </div>`).join('')}
     </div>
+    <div class="followup-block">
+      <div class="followup-icon">📬</div>
+      <div class="followup-text">
+        <strong>Peter Dennis will follow up with you shortly.</strong>
+        <p>Our team has been notified and Peter will reach out within 1 business day to discuss your results and how Babson can help reduce your AI risk.</p>
+      </div>
+    </div>
     <div class="cta-block">
       <div>
-        <h3>Ready to reduce your AI risk?</h3>
+        <h3>Want to start now?</h3>
         <p>Schedule a free 15-minute conversation with Peter Dennis at Babson College to discuss a tailored AI strategy for your team.</p>
       </div>
-      <a class="btn-cta" href="mailto:pdennis@babson.edu?subject=AI Risk Assessment — ${first} (Score: ${score}/100)&body=Hi Peter,%0D%0A%0D%0AI just completed the Babson AI Risk Assessment and scored ${score}/100 (${profile.level}).%0D%0A%0D%0AName: ${name}%0D%0ACompany: ${company}%0D%0AEmail: ${email}%0D%0A%0D%0AI'd love to schedule a 15-minute call.%0D%0A%0D%0ASource: Babson College Flyer">Book a 15-Minute Call →</a>
+      <a class="btn-cta" href="mailto:pdennis@babson.edu?subject=AI Risk Assessment — ${encodeURIComponent(first)} (Score: ${score}/100)&body=Hi Peter,%0D%0A%0D%0AI just completed the Babson AI Risk Assessment and scored ${score}/100 (${profile.level}).%0D%0A%0D%0AName: ${encodeURIComponent(name)}%0D%0ACompany: ${encodeURIComponent(company)}%0D%0AEmail: ${encodeURIComponent(email)}%0D%0A%0D%0AI'd love to schedule a 15-minute call.%0D%0A%0D%0ASource: Babson College Flyer">Book a 15-Minute Call →</a>
     </div>
   `;
-  show('results');
 }
+
+// ─── FIREWORKS ───────────────────────────────────────────────────
+(function initFireworks() {
+  const canvas  = document.getElementById('fireworksCanvas');
+  const ctx     = canvas.getContext('2d');
+  let particles = [];
+  let animating = false;
+  let startTime = 0;
+  const DURATION = 3000; // ms
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Babson-themed colors with gold/green accent
+  const COLORS = [
+    '#E8C96A', '#C9A84C', '#FFD700',  // golds
+    '#1B7A4A', '#2D6A4F', '#4CAF82',  // greens
+    '#FFFFFF', '#FFF5CC',             // whites / cream
+    '#FF6B6B', '#FF9F43', '#54A0FF',  // pops of color
+    '#FF78C4', '#A29BFE', '#00D2D3'   // extra festive
+  ];
+
+  function createBurst(x, y, count) {
+    for (let i = 0; i < count; i++) {
+      const angle  = (Math.PI * 2 / count) * i + Math.random() * 0.4;
+      const speed  = 4 + Math.random() * 9;
+      const size   = 3 + Math.random() * 5;
+      const color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const isGold = Math.random() < 0.3; // 30% chance of a large gold star
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - (Math.random() * 3),
+        size: isGold ? size * 1.6 : size,
+        color: isGold ? '#E8C96A' : color,
+        alpha: 1,
+        gravity: 0.18 + Math.random() * 0.12,
+        decay:   0.012 + Math.random() * 0.01,
+        star:    isGold,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.2
+      });
+    }
+  }
+
+  function drawStar(ctx, x, y, r, color, alpha, rotation) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a1 = (Math.PI * 2 / 5) * i - Math.PI / 2;
+      const a2 = a1 + Math.PI / 5;
+      ctx.lineTo(Math.cos(a1) * r, Math.sin(a1) * r);
+      ctx.lineTo(Math.cos(a2) * (r * 0.4), Math.sin(a2) * (r * 0.4));
+    }
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loop(ts) {
+    if (!animating) return;
+    const elapsed = ts - startTime;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Spawn additional bursts during the first 1.5s
+    if (elapsed < 1500 && Math.random() < 0.12) {
+      const bx = canvas.width  * (0.2 + Math.random() * 0.6);
+      const by = canvas.height * (0.1 + Math.random() * 0.5);
+      createBurst(bx, by, 18 + Math.floor(Math.random() * 14));
+    }
+
+    particles = particles.filter(p => p.alpha > 0.02);
+    for (const p of particles) {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += p.gravity;
+      p.vx *= 0.98;
+      p.alpha -= p.decay;
+      p.rotation += p.rotSpeed;
+
+      if (p.star) {
+        drawStar(ctx, p.x, p.y, p.size, p.color, p.alpha, p.rotation);
+      } else {
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    if (elapsed < DURATION || particles.length > 0) {
+      requestAnimationFrame(loop);
+    } else {
+      animating = false;
+      canvas.classList.remove('active');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  window.launchFireworks = function() {
+    particles = [];
+    animating = true;
+    canvas.classList.add('active');
+
+    // Initial big burst from center-ish
+    const cx = canvas.width  * 0.5;
+    const cy = canvas.height * 0.4;
+    createBurst(cx, cy, 60);
+    createBurst(cx - 80, cy + 40, 30);
+    createBurst(cx + 80, cy + 40, 30);
+
+    startTime = performance.now();
+    requestAnimationFrame(loop);
+  };
+})();
 </script>
 </body>
 </html>
