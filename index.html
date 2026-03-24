@@ -724,7 +724,7 @@ async function submitQuiz() {
   // ── Email notification via FormSubmit (no backend needed) ────────
   // Sends to smagnacca@babson.edu; pdennis@babson.edu CC'd
   try {
-    await fetch('https://formsubmit.co/ajax/smagnacca@babson.edu', {
+    await fetch('https://formsubmit.co/ajax/17899f8ddd7a78e5b7c4e2a4529ab00a', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -1028,7 +1028,7 @@ async function sendReferral(e) {
 
   // 1 ▸ Notify Scott & Peter via FormSubmit
   try {
-    await fetch('https://formsubmit.co/ajax/smagnacca@babson.edu', {
+    await fetch('https://formsubmit.co/ajax/17899f8ddd7a78e5b7c4e2a4529ab00a', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
