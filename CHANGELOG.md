@@ -4,6 +4,27 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.14.0] — 2026-03-24 UTC
+### Added
+- **Hero subtitle typewriter animation** — "The capability gap between AI-enabled and non-enabled organizations widens every week. Find out exactly where you stand." types out character-by-character at reading speed (~42ms/char) in white on page load
+- **Gold pulse on typewriter completion** — when text finishes typing, it pulses bright gold (#E8C96A with glow) then settles back to original white/65% opacity
+- **Sequential pill glow animation** — each hero pill button ("4 Questions", "Under 60 Seconds", "Personalized Results", "No Cost") glows and pulses gold in sequence with a 3-second pause between each; sequence loops continuously
+
+### Technical
+- Added `@keyframes heroSubGoldPulse` CSS animation for text pulse effect
+- Added `@keyframes pillGlowAnim` CSS animation for pill glow/pulse effect
+- Added `.hero-sub-pulse` and `.pill-glow` CSS utility classes
+- Added IDs `pill-1` through `pill-4` to pill elements
+- Added two IIFE JavaScript blocks for typewriter and sequential pill orchestration
+- Commit: `bd9f572`
+
+### Deployed
+- GitHub push: ✅ ae17396 → bd9f572 (main)
+- Netlify deploy ID: `69c33325c9ece6045be35c3e` — state: **ready** ✅
+- Live at: https://babson-ai-risk-quiz.netlify.app
+
+---
+
 ## [1.3.0] — 2026-03-24 17:26 UTC
 ### Changed
 - Full visual redesign using official Babson brand colors (forest green + gold)
