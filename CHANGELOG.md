@@ -4,6 +4,25 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.1.0] — 2026-03-25 UTC
+
+### Changed
+- **Removed Peter Dennis photo and bio** from hero "Meet the Team" section and results team strip — site now shows Scott Magnacca only
+- **Removed pdennis@babson.edu CC** from both quiz result and referral email notifications
+- **Updated formsubmit endpoint** to `scott.magnacca1@gmail.com` — all lead and referral notifications now go to Scott only
+- **Updated follow-up copy** — "Peter Dennis will follow up" → "Scott Magnacca will follow up"
+- **Updated CTA block** — "Schedule with Peter Dennis at Babson College" → "Schedule with Scott Magnacca"; mailto updated to scott.magnacca1@gmail.com
+- **Updated referral section** — removed "& Peter" from subtitle ("we'll also let Scott know") and success message
+- **Fixed pre-filled email greeting** — "Hi Peter," → "Hi Scott,"
+
+### Deployed
+- Commit: `1f09046` — auto-deployed to Netlify via GitHub push
+- Live at: https://ceo-sales-60-second-quiz-outreach.netlify.app
+
+> ⚠️ **Action required:** FormSubmit will send a one-time verification email to scott.magnacca1@gmail.com — click the link to activate lead notifications.
+
+---
+
 ## [1.0.0] — 2026-03-25 UTC
 
 ### Added
