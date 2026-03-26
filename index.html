@@ -807,7 +807,7 @@ async function submitQuiz() {
         'Company': company,
         'AI Risk Score': `${score} / 100`,
         'Risk Level': profile.level,
-        'Lead Source': 'Babson College Executive Education Flyer',
+        'Lead Source': 'CEO Sales 60-Second Quiz Outreach',
         'Assessment Date': new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
       })
     });
@@ -1093,51 +1093,70 @@ async function sendReferral(e) {
   const name   = document.getElementById('referYourName').value.trim();
   const fEmail = document.getElementById('referFriendEmail').value.trim();
 
+  if (!name || !fEmail) return;
+
   btn.disabled = true;
   btn.textContent = 'Sending…';
   msg.className = 'refer-msg';
   msg.style.display = 'none';
 
-  const quizUrl = 'https://babson-ai-risk-quiz.netlify.app';
+  const quizUrl = 'https://ceo-sales-60-second-quiz-outreach.netlify.app';
+  let success = false;
 
-  // 1 ▸ Notify Scott via FormSubmit
+  // 1 ▸ Notify Scott automatically via FormSubmit (no email client needed)
   try {
-    await fetch('https://formsubmit.co/ajax/17899f8ddd7a78e5b7c4e2a4529ab00a', {
+    const res = await fetch('https://formsubmit.co/ajax/scott.magnacca1@gmail.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        _subject: 'AI Quiz Referral — ' + name + ' referred ' + fEmail,
+        _subject: '🔗 New Referral — ' + name + ' referred ' + fEmail,
+        _replyto: fEmail,
         _template: 'table',
         'Referred By': name,
         "Friend's Email": fEmail,
         'Quiz Link': quizUrl,
-        'Note': name + ' used the "Send to a Friend" feature on the quiz site to refer ' + fEmail + '.'
+        'Date': new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }),
+        'Note': name + ' used the "Send to a Friend" feature to refer ' + fEmail + ' to the 60-Second AI Risk Quiz.'
       })
     });
-  } catch (_) { /* silent — mailto still fires */ }
+    const data = await res.json();
+    success = data.success === 'true' || data.success === true;
+  } catch (err) {
+    console.warn('Referral notification error:', err);
+  }
 
-  // 2 ▸ Open user's email client to send friend the invite
-  const subject = encodeURIComponent("A quick quiz worth your time — What's Your AI Risk Score?");
-  const body = encodeURIComponent(
-    'Hi,\n\n' + name + ' thought you\'d find this valuable.\n\n' +
-    'Babson College Executive Education has a FREE 60-second AI Risk Assessment that benchmarks ' +
-    'your organization\'s AI readiness and gives you a personalized score with actionable insights.\n\n' +
-    'Take it here (it really is 60 seconds): ' + quizUrl + '\n\n' +
-    '— Sent via the Babson AI Risk Quiz'
-  );
-  window.open('mailto:' + fEmail + '?subject=' + subject + '&body=' + body, '_blank');
-
-  // 3 ▸ Show success
-  msg.textContent = '\u2713 Your email client opened to send the invite to ' + fEmail + '. Scott has been notified of your referral!';
-  msg.className = 'refer-msg success';
-  btn.textContent = 'Sent!';
-  setTimeout(function() {
-    btn.disabled = false;
-    btn.textContent = 'Send the Assessment ✉';
-    document.getElementById('referYourName').value = '';
-    document.getElementById('referFriendEmail').value = '';
-    setTimeout(function() { msg.className = 'refer-msg'; }, 6000);
-  }, 3000);
+  // 2 ▸ Show result
+  if (success) {
+    msg.textContent = '\u2713 Done! Scott has been notified that ' + name + ' referred ' + fEmail + ' to the assessment.';
+    msg.className = 'refer-msg success';
+    btn.textContent = 'Sent!';
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.textContent = 'Send the Assessment \u2709';
+      document.getElementById('referYourName').value = '';
+      document.getElementById('referFriendEmail').value = '';
+      setTimeout(function() { msg.style.display = 'none'; msg.className = 'refer-msg'; }, 6000);
+    }, 3000);
+  } else {
+    // Fallback: open mailto so the referral still gets through
+    const subject = encodeURIComponent("Check this out — 60-Second AI Risk Assessment");
+    const body = encodeURIComponent(
+      'Hi,\n\n' + name + ' thought you\'d find this valuable.\n\n' +
+      'Take this free 60-second AI Risk Assessment to see where your sales strategy stands:\n' +
+      quizUrl + '\n\n— ' + name
+    );
+    window.open('mailto:scott.magnacca1@gmail.com?subject=' + encodeURIComponent('Referral from ' + name + ' → ' + fEmail) + '&body=' + body, '_blank');
+    msg.textContent = '\u2713 Referral sent! Scott will receive the details shortly.';
+    msg.className = 'refer-msg success';
+    btn.textContent = 'Sent!';
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.textContent = 'Send the Assessment \u2709';
+      document.getElementById('referYourName').value = '';
+      document.getElementById('referFriendEmail').value = '';
+      setTimeout(function() { msg.style.display = 'none'; msg.className = 'refer-msg'; }, 6000);
+    }, 3000);
+  }
 }
 
 /* ── HERO-SUB TYPEWRITER ANIMATION ─────────────────────────────── */
