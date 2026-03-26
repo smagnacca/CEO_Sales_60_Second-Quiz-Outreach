@@ -4,6 +4,30 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.7.0] — 2026-03-26 UTC
+
+### Fixed
+- **Lead Source field** — quiz submission email now correctly reads "CEO Sales 60-Second Quiz Outreach" (was "Babson College Executive Education Flyer" in the FormSubmit notification to Scott)
+- **Residual Babson references purged** — updated insight copy in Critical Risk and Elevated Risk result tiers ("Babson's executive programs" → "Scott Magnacca's executive coaching"); fixed QR code alt text; updated page `<title>` tag; cleaned privacy note under email gate form; updated CTA mailto body copy
+
+### Deployed
+- Commit: `pending` — auto-deployed to Netlify via GitHub push
+
+---
+
+## [1.6.0] — 2026-03-26 UTC
+
+### Fixed
+- **Referral form — auto-notify Scott directly** — replaced dead FormSubmit hash (tied to old Babson email) with direct `scott.magnacca1@gmail.com` endpoint; Scott now receives referral name + friend's email automatically the moment the button is clicked — no email client required
+- **Quiz URL in referral** — corrected from `babson-ai-risk-quiz.netlify.app` to `ceo-sales-60-second-quiz-outreach.netlify.app`
+- **Added success/failure detection** — mailto fallback fires if FormSubmit is temporarily unavailable
+- **Success message** — now confirms Scott was notified with referrer name and friend email
+
+### Deployed
+- Commit: `c9d3900` — auto-deployed to Netlify via GitHub push
+
+---
+
 ## [1.5.0] — 2026-03-26 UTC
 
 ### Fixed
