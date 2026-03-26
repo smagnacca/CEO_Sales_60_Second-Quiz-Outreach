@@ -4,6 +4,17 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.2.0] — 2026-03-25 UTC
+
+### Changed
+- **Replaced QR code** in the "Refer a Friend" section — old code pointed to the source Babson site; new code points to `https://ceo-sales-60-second-quiz-outreach.netlify.app`
+- QR code uses rounded modules and high error-correction (level H) for clean scanning
+
+### Deployed
+- Commit: `66c852e` — auto-deployed to Netlify via GitHub push
+
+---
+
 ## [1.1.0] — 2026-03-25 UTC
 
 ### Changed
