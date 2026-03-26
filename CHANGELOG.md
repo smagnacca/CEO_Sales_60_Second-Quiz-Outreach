@@ -4,6 +4,50 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.5.0] — 2026-03-26 UTC
+
+### Fixed
+- **Suppressed iCloud / browser password AutoFill popup on refer section** — added `autocomplete="off"`, `data-lpignore="true"`, and `data-1p-ignore` to both refer inputs (Your name, Friend's work email); changed refer email input from `type="email"` to `type="text"` to eliminate browser credential-detection heuristics
+
+### Changed
+- **Pill animation redesign** — pills no longer fire on page load; sequence now triggered only after the hero subtitle typewriter completes
+  - 4-second pause after typewriter finishes before first pill fires
+  - Each pill now flashes **twice** (was once) before advancing
+  - 5-second pause between each pill (was 3s)
+  - Sequence plays through all 4 pills once and stops (no loop)
+
+### Deployed
+- Commit: `2f32158` — auto-deployed to Netlify via GitHub push
+
+---
+
+## [1.4.0] — 2026-03-26 UTC
+
+### Fixed
+- **Suppressed iCloud / browser password AutoFill popup on email gate form** — added `autocomplete="off"`, `data-lpignore="true"`, and `data-1p-ignore` to all three email gate inputs (Full Name, Work Email, Company); changed email input from `type="email"` to `type="text"`
+
+### Deployed
+- Commit: `f505cba` — auto-deployed to Netlify via GitHub push
+
+---
+
+## [1.3.0] — 2026-03-26 UTC
+
+### Changed
+- **Bio card — credential list** — replaced prose paragraph with 4-bullet list: "25+ Years in Financial Services", "Adjunct Lecturer, Babson College", "Master's (ALM) in Psychology, Harvard University", "Author, Storyselling in the Age of AI" (applied to both landing page and results page bio cards)
+- **Bio card — title corrected** — "Adjunct Professor" → "Adjunct Lecturer" on both instances
+- **Hero — new CTA headline** — added "Uncover the AI Blind Spots Costing You High-Ticket Sales." above the hero pills
+- **Hero — new subtext** — added benchmark subtext below the headline: "In just 60 seconds, this assessment will benchmark your current strategy against top industry performers and reveal where your sales narrative is falling behind."
+- **Attention ratio** — removed all external outbound links (babson.edu) from landing page and results page; 1:1 focus enforced
+- **Button styling** — `btn-next` (Continue / See My Results) and `btn-submit` (Unlock My AI Risk Score) updated to high-contrast gold accent (`#C9A84C` on dark green)
+- **Email gate copy** — removed residual "Babson College" reference from lock-sub copy
+- **Results page — referral unlock block** — added "Forward this assessment to a colleague, and instantly unlock Chapter 1 of Storyselling in the Age of AI for free." block between follow-up and team-strip sections
+
+### Deployed
+- Commit: `1c673e7` — auto-deployed to Netlify via GitHub push
+
+---
+
 ## [1.2.0] — 2026-03-25 UTC
 
 ### Changed
@@ -67,5 +111,4 @@ All changes to this project are documented here in reverse chronological order.
 ## Pending / Planned
 - [ ] **Lead capture → Google Sheets** — wire email gate submissions to master lead template via smagnacca/email-outreach-machine
 - [ ] **Email outreach integration** — connect with email-outreach-machine repo to send quiz invitations and capture responses
-- [ ] **Branding pass** — update copy, colors, and CTAs to match CEO sales outreach context
 - [ ] **Formspree / webhook endpoint** — activate form submission to collect leads in real time
