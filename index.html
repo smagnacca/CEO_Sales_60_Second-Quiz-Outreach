@@ -433,7 +433,7 @@
     100% { box-shadow: none; border-color: rgba(255,255,255,.14); color: rgba(255,255,255,.75); }
   }
   .pill-glow {
-    animation: pillGlowAnim 1.3s ease forwards;
+    animation: pillGlowAnim 0.9s ease forwards;
   }
 </style>
 </head>
@@ -648,8 +648,8 @@
     <div class="refer-sub">Know someone who should take this? Enter their email and we'll send them a direct link — we'll also let Scott know you referred them.</div>
     <form class="refer-form" id="referForm" onsubmit="sendReferral(event)">
       <div class="refer-row">
-        <input class="refer-input" id="referYourName" type="text" placeholder="Your name" required>
-        <input class="refer-input" id="referFriendEmail" type="email" placeholder="Friend's work email" required>
+        <input class="refer-input" id="referYourName" type="text" placeholder="Your name" autocomplete="off" data-lpignore="true" data-1p-ignore required>
+        <input class="refer-input" id="referFriendEmail" type="text" placeholder="Friend's work email" autocomplete="off" data-lpignore="true" data-1p-ignore required>
       </div>
       <div class="refer-row">
         <button class="refer-btn" type="submit" id="referBtn">Send the Assessment ✉</button>
@@ -1159,6 +1159,8 @@ async function sendReferral(e) {
     } else {
       // Finished typing — pulse bright gold then settle back to original
       heroSub.classList.add('hero-sub-pulse');
+      // After 4-second pause, start the pill flash sequence
+      setTimeout(startPillSequence, 4000);
     }
   }
 
@@ -1166,36 +1168,43 @@ async function sendReferral(e) {
 })();
 
 /* ── PILL SEQUENTIAL GLOW / PULSE ──────────────────────────────── */
-(function() {
+// Triggered by typewriter on completion — not on page load
+function startPillSequence() {
   var pillIds = ['pill-1', 'pill-2', 'pill-3', 'pill-4'];
-  var GLOW_DURATION = 1300; // must match CSS animation duration (ms)
-  var PAUSE_BETWEEN  = 3000; // ms pause between each pill
+  var PAUSE_BETWEEN = 5000; // ms pause between each pill
+  var FLASH_GAP     = 200;  // ms gap between the two flashes on the same pill
 
-  function glowPill(index) {
-    if (index >= pillIds.length) {
-      // All pills done — wait then loop from the top
-      setTimeout(function() { glowPill(0); }, PAUSE_BETWEEN);
-      return;
-    }
+  function flashPill(index) {
+    if (index >= pillIds.length) return; // run once through, no loop
     var pill = document.getElementById(pillIds[index]);
-    if (!pill) { glowPill(index + 1); return; }
+    if (!pill) { flashPill(index + 1); return; }
 
-    // Remove class, force reflow, re-add to restart animation cleanly
-    pill.classList.remove('pill-glow');
-    void pill.offsetWidth;
-    pill.classList.add('pill-glow');
+    var flashesDone = 0;
 
-    pill.addEventListener('animationend', function handler() {
-      pill.removeEventListener('animationend', handler);
+    function doFlash() {
       pill.classList.remove('pill-glow');
-      // 3-second pause before the next pill
-      setTimeout(function() { glowPill(index + 1); }, PAUSE_BETWEEN);
-    });
+      void pill.offsetWidth; // force reflow to restart animation
+      pill.classList.add('pill-glow');
+
+      pill.addEventListener('animationend', function handler() {
+        pill.removeEventListener('animationend', handler);
+        pill.classList.remove('pill-glow');
+        flashesDone++;
+        if (flashesDone < 2) {
+          // Brief gap then second flash
+          setTimeout(doFlash, FLASH_GAP);
+        } else {
+          // Both flashes done — pause then move to next pill
+          setTimeout(function() { flashPill(index + 1); }, PAUSE_BETWEEN);
+        }
+      });
+    }
+
+    doFlash();
   }
 
-  // Start sequence shortly after page load
-  setTimeout(function() { glowPill(0); }, 600);
-})();
+  flashPill(0);
+}
 </script>
 </body>
 </html>
