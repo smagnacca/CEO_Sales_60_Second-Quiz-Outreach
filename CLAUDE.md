@@ -47,7 +47,7 @@ All leads originating from this site are tagged as: **Babson College Professiona
 ### Questions
 1. Current AI Usage (A=1, B=2, C=3, D=4)
 2. Team AI Confidence (A=1, B=2, C=3, D=4)
-3. Competitive Concern (A=4, B=3, C=2, D=1) ← inverted
+3. Competitive Concern (A=1, B=2, C=3, D=4)
 4. AI Strategy Maturity (A=1, B=2, C=3, D=4)
 
 ### Scoring Formula
