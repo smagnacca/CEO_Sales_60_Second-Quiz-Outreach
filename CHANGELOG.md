@@ -4,6 +4,34 @@ All changes to this project are documented here in reverse chronological order.
 
 ---
 
+## [1.8.1] — 2026-03-28 UTC
+
+### Fixed
+- **Q3 Likert scale order corrected** — Question 3 ("How concerned are you that competitors are gaining an AI-driven advantage?") now runs from least to most concerned (A=Not concerned → D=Extremely concerned), matching the ascending pattern of Q1, Q2, and Q4; previous order was inverted (A=Extremely → D=Not concerned)
+- **CLAUDE.md updated** — Q3 scoring note updated from `(A=4, B=3, C=2, D=1) ← inverted` to `(A=1, B=2, C=3, D=4)`
+
+### Deployed
+- Commit: auto-deployed to Netlify via GitHub push
+
+---
+
+## [1.8.0] — 2026-03-28 UTC
+
+### Added
+- **Google Sheets lead capture** — quiz submissions now automatically append a row to the `Quiz_Leads` tab in the master Google Sheet (`1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE`) capturing: Timestamp, Name, Email, Company, Score, and all 4 quiz answers
+- **Netlify serverless function** — `netlify/functions/submit-lead.js` authenticates via Google Service Account JWT (zero npm dependencies — uses Node 18+ built-in `crypto` + native `fetch`) and calls the Google Sheets Append API
+- **Fire-and-forget wiring in `index.html`** — `submitQuiz()` now posts lead data to `/.netlify/functions/submit-lead` after FormSubmit notification; runs non-blocking so results page is never delayed
+- **`GOOGLE_SERVICE_ACCOUNT_JSON` env var** — set in Netlify production environment (service account: `emailbot@email-robot-491000.iam.gserviceaccount.com`)
+
+### Fixed
+- **Answer index alignment** — corrected answer values to use 1-based indices matching `data-q` attributes in the quiz HTML so Q1–Q4 responses record correctly in the sheet
+- **Google Sheet ID** — confirmed and locked to the Quiz_Leads spreadsheet ID
+
+### Deployed
+- Commits: `11bfdcb`, `0e0fcb5`, `c98afe9`, `bca1808`, `e7b8213` — auto-deployed to Netlify via GitHub push
+
+---
+
 ## [1.7.0] — 2026-03-26 UTC
 
 ### Fixed
@@ -11,7 +39,7 @@ All changes to this project are documented here in reverse chronological order.
 - **Residual Babson references purged** — updated insight copy in Critical Risk and Elevated Risk result tiers ("Babson's executive programs" → "Scott Magnacca's executive coaching"); fixed QR code alt text; updated page `<title>` tag; cleaned privacy note under email gate form; updated CTA mailto body copy
 
 ### Deployed
-- Commit: `pending` — auto-deployed to Netlify via GitHub push
+- Commit: `e702827` — auto-deployed to Netlify via GitHub push
 
 ---
 
@@ -129,10 +157,3 @@ All changes to this project are documented here in reverse chronological order.
 - GitHub: https://github.com/smagnacca/CEO_Sales_60_Second-Quiz-Outreach (main)
 - Netlify site ID: `20e7d9ad-c961-4d75-a120-e342f2ed5a74`
 - Live at: https://ceo-sales-60-second-quiz-outreach.netlify.app
-
----
-
-## Pending / Planned
-- [ ] **Lead capture → Google Sheets** — wire email gate submissions to master lead template via smagnacca/email-outreach-machine
-- [ ] **Email outreach integration** — connect with email-outreach-machine repo to send quiz invitations and capture responses
-- [ ] **Formspree / webhook endpoint** — activate form submission to collect leads in real time
