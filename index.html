@@ -815,6 +815,13 @@ async function submitQuiz() {
     console.warn('Email notification error:', err);
   }
 
+  // ── Google Sheets lead capture (fire-and-forget) ─────────────
+  fetch('/.netlify/functions/submit-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, company, score, answers: [answers[0]??'', answers[1]??'', answers[2]??'', answers[3]??''] })
+  }).catch(() => {});
+
   // ── Unlock animation ─────────────────────────────────────────────
   clearTimeout(shakeTimer);
   document.getElementById('lockSvg').classList.remove('shake');
