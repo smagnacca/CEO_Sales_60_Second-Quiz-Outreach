@@ -4,7 +4,7 @@
 
 const { createSign } = require("crypto");
 
-const SHEET_ID = "1fWTCu8HWY0Rw_y5Nqq7QLzn27kxNCrzSIE3cJg9bTqo";
+const SHEET_ID = "1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE";
 const SHEET_TAB = "Quiz_Leads";
 const SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 
