@@ -99,3 +99,22 @@ curl -X POST \
 - [ ] A/B test hero headline copy
 - [ ] Add a "Share your score" social share button on results page
 - [ ] CRM integration (HubSpot / Salesforce)
+
+---
+
+## What Cowork Handles (do these directly)
+Cowork handles tasks directly using local tools first — file editing, git commands, API calls, MCP tools — without opening Chrome tabs or controlling the screen unless absolutely necessary. This includes: research, copywriting, strategy, Netlify config, DNS, SendGrid, Google Sheets, pushing to GitHub, updating the changelog, file management, and anything that doesn't require modifying website source code. Only use Chrome tabs or screen control when a task genuinely cannot be done any other way.
+
+## What Claude Code Handles (code changes only)
+When Scott requests changes to website source code, HTML, CSS, JavaScript, or any code file:
+1. Identify what needs to change and confirm it belongs to THIS project
+2. Craft a clear, specific Claude Code prompt describing the full task
+3. Write the complete command to Scott's clipboard:
+   cd ~/cowork-ceo-sales-60-second-quiz-outreach && claude --dangerously-skip-permissions "[detailed prompt here]"
+4. Tell Scott: "Ready — paste into your Terminal and hit Enter"
+5. Claude Code handles the rest: edits files, commits, and pushes to GitHub
+
+## Branch Rules — CRITICAL
+Always work on the main branch only. Never create other branches. Claude Code must always commit and push to main. If any other branch exists in the repo, flag it to Scott immediately. The changelog serves as the project history — branches are never needed.
+
+https://github.com/smagnacca/CEO_Sales_60_Second-Quiz-Outreach
