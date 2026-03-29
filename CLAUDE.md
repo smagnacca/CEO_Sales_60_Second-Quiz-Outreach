@@ -105,6 +105,34 @@ curl -X POST \
 ## What Cowork Handles (do these directly)
 Cowork handles tasks directly using local tools first — file editing, git commands, API calls, MCP tools — without opening Chrome tabs or controlling the screen unless absolutely necessary. This includes: research, copywriting, strategy, Netlify config, DNS, SendGrid, Google Sheets, pushing to GitHub, updating the changelog, file management, and anything that doesn't require modifying website source code. Only use Chrome tabs or screen control when a task genuinely cannot be done any other way.
 
+### GitHub: Always Use the API Directly
+Never clone repos, open a terminal, or use Claude Code just to push files to GitHub. Use the GitHub REST API with the stored token instead — it is faster, uses fewer tokens, and requires no manual steps from Scott.
+
+**Token:** Stored in Cowork auto-memory (`reference_github_token.md`) — loaded automatically at session start. Never hardcode the token in files committed to the repo.
+**Repo:** `smagnacca/CEO_Sales_60_Second-Quiz-Outreach`
+
+```bash
+# Load token from memory/env
+GH_TOKEN="<from auto-memory>"
+REPO="smagnacca/CEO_Sales_60_Second-Quiz-Outreach"
+
+# 1. Get the current file's SHA (required for updates)
+curl -s -H "Authorization: token $GH_TOKEN" \
+  https://api.github.com/repos/$REPO/contents/PATH_TO_FILE \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])"
+
+# 2. Push updated file (base64-encode content first)
+CONTENT=$(base64 -w 0 < local_file.txt)
+SHA="<sha from step 1>"
+curl -s -X PUT \
+  -H "Authorization: token $GH_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"message\":\"Your commit message\",\"content\":\"$CONTENT\",\"sha\":\"$SHA\"}" \
+  https://api.github.com/repos/$REPO/contents/PATH_TO_FILE
+```
+
+This works for any file in the repo. Every push to `main` auto-deploys to Netlify — no separate deploy step needed.
+
 ## What Claude Code Handles (code changes only)
 When Scott requests changes to website source code, HTML, CSS, JavaScript, or any code file:
 1. Identify what needs to change and confirm it belongs to THIS project
