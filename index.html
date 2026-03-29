@@ -439,6 +439,32 @@
 </head>
 <body>
 
+
+<!-- Hidden Netlify forms for all notification sources -->
+<form name="quiz-lead" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="quiz-lead" />
+  <input type="hidden" name="bot-field" />
+  <input type="text" name="prospect-name" />
+  <input type="email" name="prospect-email" />
+  <input type="text" name="prospect-company" />
+  <input type="text" name="score" />
+  <input type="text" name="risk-level" />
+</form>
+<form name="book-call" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="book-call" />
+  <input type="hidden" name="bot-field" />
+  <input type="text" name="prospect-name" />
+  <input type="email" name="prospect-email" />
+  <input type="text" name="prospect-company" />
+  <input type="text" name="score" />
+  <input type="text" name="risk-level" />
+</form>
+<form name="referral" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="referral" />
+  <input type="hidden" name="bot-field" />
+  <input type="text" name="referred-by" />
+  <input type="email" name="friend-email" />
+</form>
 <!-- Hidden Netlify form for free chapter requests -->
 <form name="chapter-request" data-netlify="true" netlify-honeypot="bot-field" hidden>
   <input type="hidden" name="form-name" value="chapter-request" />
@@ -818,27 +844,21 @@ async function submitQuiz() {
   const profile = getProfile(score);
   const first   = name.split(' ')[0];
 
-  // ── Email notification via FormSubmit (no backend needed) ────────
-  // Sends to scott.magnacca1@gmail.com
+  // ── Notify Scott via Netlify Forms (quiz-lead) ─────────────────
   try {
-    await fetch('https://formsubmit.co/ajax/scott.magnacca1@gmail.com', {
+    const qlForm = document.querySelector('form[name="quiz-lead"]');
+    qlForm.querySelector('[name="prospect-name"]').value  = name;
+    qlForm.querySelector('[name="prospect-email"]').value = email;
+    qlForm.querySelector('[name="prospect-company"]').value = company;
+    qlForm.querySelector('[name="score"]').value          = score + ' / 100';
+    qlForm.querySelector('[name="risk-level"]').value     = profile.level;
+    fetch('/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        _subject: `New AI Risk Assessment — ${name} | ${score}/100 · ${profile.level}`,
-        _replyto: email,
-        _template: 'table',
-        'Full Name': name,
-        'Work Email': email,
-        'Company': company,
-        'AI Risk Score': `${score} / 100`,
-        'Risk Level': profile.level,
-        'Lead Source': 'CEO Sales 60-Second Quiz Outreach',
-        'Assessment Date': new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
-      })
-    });
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(qlForm)).toString()
+    }).catch(() => {});
   } catch (err) {
-    console.warn('Email notification error:', err);
+    console.warn('Quiz lead notification error:', err);
   }
 
   // ── Google Sheets lead capture (fire-and-forget) ─────────────
@@ -937,7 +957,8 @@ function buildResults(score, profile, name, first, email, company) {
         <h3>Want to start now?</h3>
         <p>Schedule a free 15-minute conversation with Scott Magnacca to discuss a tailored AI strategy for your team.</p>
       </div>
-      <a class="btn-cta" href="mailto:scott.magnacca1@gmail.com?subject=AI Risk Assessment — ${encodeURIComponent(first)} (Score: ${score}/100)&body=Hi Scott,%0D%0A%0D%0AI just completed the AI Risk Assessment and scored ${score}/100 (${profile.level}).%0D%0A%0D%0AName: ${encodeURIComponent(name)}%0D%0ACompany: ${encodeURIComponent(company)}%0D%0AEmail: ${encodeURIComponent(email)}%0D%0A%0D%0AI'd love to schedule a 15-minute call.%0D%0A%0D%0ASource: CEO Sales 60-Second Quiz">Book a 15-Minute Call →</a>
+      <button class="btn-cta" onclick="bookCall('${name}','${email}','${company}',${score},'${profile.level}')" id="bookCallBtn">Book a 15-Minute Call →</button>
+      <p id="bookCallConfirm" style="display:none;color:#1a5c2a;font-weight:600;margin-top:10px;">✅ Scott has been notified — he'll reach out to schedule your call!</p>
     </div>
   `;
 }
@@ -1121,6 +1142,29 @@ function buildResults(score, profile, name, first, email, company) {
 })();
 
 // ─── REFER A FRIEND ──────────────────────────────────────────────
+async function bookCall(name, email, company, score, level) {
+  const btn = document.getElementById('bookCallBtn');
+  const confirm = document.getElementById('bookCallConfirm');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const form = document.querySelector('form[name="book-call"]');
+    form.querySelector('[name="prospect-name"]').value    = name;
+    form.querySelector('[name="prospect-email"]').value   = email;
+    form.querySelector('[name="prospect-company"]').value = company;
+    form.querySelector('[name="score"]').value            = score + ' / 100';
+    form.querySelector('[name="risk-level"]').value       = level;
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    });
+  } catch(e) { console.warn('bookCall error:', e); }
+  btn.style.display = 'none';
+  if (confirm) confirm.style.display = 'block';
+}
+
 async function sendReferral(e) {
   e.preventDefault();
   const btn    = document.getElementById('referBtn');
@@ -1138,24 +1182,17 @@ async function sendReferral(e) {
   const quizUrl = 'https://ceo-sales-60-second-quiz-outreach.netlify.app';
   let success = false;
 
-  // 1 ▸ Notify Scott automatically via FormSubmit (no email client needed)
+  // 1 ▸ Notify Scott via Netlify Forms (referral)
   try {
-    const res = await fetch('https://formsubmit.co/ajax/scott.magnacca1@gmail.com', {
+    const refForm = document.querySelector('form[name="referral"]');
+    refForm.querySelector('[name="referred-by"]').value  = name;
+    refForm.querySelector('[name="friend-email"]').value = fEmail;
+    const res = await fetch('/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        _subject: '🔗 New Referral — ' + name + ' referred ' + fEmail,
-        _replyto: fEmail,
-        _template: 'table',
-        'Referred By': name,
-        "Friend's Email": fEmail,
-        'Quiz Link': quizUrl,
-        'Date': new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }),
-        'Note': name + ' used the "Send to a Friend" feature to refer ' + fEmail + ' to the 60-Second AI Risk Quiz.'
-      })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(refForm)).toString()
     });
-    const data = await res.json();
-    success = data.success === 'true' || data.success === true;
+    success = res.ok;
   } catch (err) {
     console.warn('Referral notification error:', err);
   }
