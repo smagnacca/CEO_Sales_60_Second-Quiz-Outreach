@@ -1,12 +1,13 @@
-// Netlify Function: submit-lead.js
 // Receives quiz data → appends row to Google Sheets (Quiz_Leads tab)
+// Auto-creates the Quiz_Leads tab + headers if it doesn't exist yet
 // Zero npm deps — uses Node built-in crypto + native fetch (Node 18+)
 
 const { createSign } = require("crypto");
 
-const SHEET_ID = "1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE";
+const SHEET_ID  = "1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE";
 const SHEET_TAB = "Quiz_Leads";
-const SCOPE = "https://www.googleapis.com/auth/spreadsheets";
+const SCOPE     = "https://www.googleapis.com/auth/spreadsheets";
+const HEADERS   = ["Timestamp","Name","Email","Company","Score","Q1 Answer","Q2 Answer","Q3 Answer","Q4 Answer"];
 
 function makeJWT(sa) {
   const now = Math.floor(Date.now() / 1000);
@@ -27,6 +28,38 @@ async function getToken(sa) {
   const d = await res.json();
   if (!d.access_token) throw new Error("Token error: " + JSON.stringify(d));
   return d.access_token;
+}
+
+async function ensureSheet(token) {
+  // Get existing sheet names
+  const metaRes = await fetch(
+    "https://sheets.googleapis.com/v4/spreadsheets/" + SHEET_ID + "?fields=sheets.properties.title",
+    { headers: { Authorization: "Bearer " + token } }
+  );
+  const meta = await metaRes.json();
+  const exists = meta.sheets && meta.sheets.some(s => s.properties.title === SHEET_TAB);
+  if (exists) return; // nothing to do
+
+  // Create the tab
+  const createRes = await fetch(
+    "https://sheets.googleapis.com/v4/spreadsheets/" + SHEET_ID + ":batchUpdate",
+    {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      body: JSON.stringify({ requests: [{ addSheet: { properties: { title: SHEET_TAB } } }] })
+    }
+  );
+  if (!createRes.ok) throw new Error("Create sheet error: " + await createRes.text());
+
+  // Add header row
+  await fetch(
+    "https://sheets.googleapis.com/v4/spreadsheets/" + SHEET_ID + "/values/" + encodeURIComponent(SHEET_TAB) + "!A1:append?valueInputOption=USER_ENTERED",
+    {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      body: JSON.stringify({ values: [HEADERS] })
+    }
+  );
 }
 
 async function appendRow(token, row) {
@@ -52,12 +85,13 @@ exports.handler = async (event) => {
     if (!email) return { statusCode: 400, headers: h, body: JSON.stringify({ error: "Email required" }) };
     const sa = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
     const token = await getToken(sa);
+    await ensureSheet(token);           // creates tab + headers if missing
     const row = [
       new Date().toISOString(),
-      name || "",
+      name    || "",
       email,
       company || "",
-      score != null ? score : "",
+      score   != null ? score : "",
       answers && answers[0] != null ? answers[0] : "",
       answers && answers[1] != null ? answers[1] : "",
       answers && answers[2] != null ? answers[2] : "",
