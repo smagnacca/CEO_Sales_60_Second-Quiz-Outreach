@@ -7,7 +7,7 @@ const { createSign } = require("crypto");
 const SHEET_ID  = "1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE";
 const SHEET_TAB = "Quiz_Leads";
 const SCOPE     = "https://www.googleapis.com/auth/spreadsheets";
-const HEADERS   = ["Timestamp","Name","Email","Company","Score","Q1 Answer","Q2 Answer","Q3 Answer","Q4 Answer"];
+const HEADERS   = ["Timestamp","Name","Email","Company","Score","Q1 Answer","Q2 Answer","Q3 Answer","Q4 Answer","UTM Source","UTM Medium","UTM Campaign","UTM Content"];
 
 function makeJWT(sa) {
   const now = Math.floor(Date.now() / 1000);
@@ -81,7 +81,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers: h, body: "" };
   if (event.httpMethod !== "POST") return { statusCode: 405, headers: h, body: "Method Not Allowed" };
   try {
-    const { email, name, company, score, answers } = JSON.parse(event.body || "{}");
+    const { email, name, company, score, answers, utm_source, utm_medium, utm_campaign, utm_content } = JSON.parse(event.body || "{}");
     if (!email) return { statusCode: 400, headers: h, body: JSON.stringify({ error: "Email required" }) };
     const sa = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
     const token = await getToken(sa);
@@ -95,7 +95,11 @@ exports.handler = async (event) => {
       answers && answers[0] != null ? answers[0] : "",
       answers && answers[1] != null ? answers[1] : "",
       answers && answers[2] != null ? answers[2] : "",
-      answers && answers[3] != null ? answers[3] : ""
+      answers && answers[3] != null ? answers[3] : "",
+      utm_source   || "",
+      utm_medium   || "",
+      utm_campaign || "",
+      utm_content  || "",
     ];
     await appendRow(token, row);
     return { statusCode: 200, headers: h, body: JSON.stringify({ ok: true }) };

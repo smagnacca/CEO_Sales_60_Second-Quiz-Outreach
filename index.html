@@ -717,6 +717,17 @@
 </footer>
 
 <script>
+// ─── UTM PARAMS (captured once on load) ──────────────────────────
+const _utmParams = (function() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   p.get('utm_source')   || '',
+    utm_medium:   p.get('utm_medium')   || '',
+    utm_campaign: p.get('utm_campaign') || '',
+    utm_content:  p.get('utm_content')  || '',
+  };
+})();
+
 // ─── STATE ───────────────────────────────────────────────────────
 const answers = {};
 let shakeTimer = null;
@@ -867,7 +878,7 @@ async function submitQuiz() {
   fetch('/.netlify/functions/submit-lead', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, company, score, answers: [answers[1]??'', answers[2]??'', answers[3]??'', answers[4]??''] })
+    body: JSON.stringify({ name, email, company, score, answers: [answers[1]??'', answers[2]??'', answers[3]??'', answers[4]??''], ..._utmParams })
   }).catch(() => {});
 
   // ── Unlock animation ─────────────────────────────────────────────
